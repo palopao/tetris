@@ -318,9 +318,10 @@ html_game_code = f"""
         <button id="btnPause">Pausar</button>
     </div>
 
-    <p class="keyboard-hint">
-        Telemóvel: Deslize no jogo para mover / Toque para rodar
-    </p>
+    <div class="keyboard-hint">
+        <p><strong>Computador:<br></strong> Setas / A/D (mover) • Seta Cima / W (rodar) • P (pausar)</p>
+        <p><strong>Telemóvel:<br></strong> Deslizar no jogo (mover) • Toque (rodar)</p>
+    </div>
 </div>
 
 <script>
@@ -762,4 +763,4 @@ requestAnimationFrame(gameLoop);
 </html>
 """
 
-st.iframe(html_game_code, height=780)
+st.iframe(html_game_code, height=850)
