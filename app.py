@@ -7,7 +7,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Pontuações padrão integradas diretamente no código (sem ficheiros JSON)
 INITIAL_SCORES = [
     {"nome": "José Torres", "pontos": 149083},
 ]
@@ -36,9 +35,10 @@ html_game_code = f"""
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        min-height: 750px;
+        width: 100%;
+        max-width: 100vw;
         box-sizing: border-box;
-        padding: 5px 0;
+        padding: 5px 10px;
     }}
     #header-container {{
         text-align: center;
@@ -63,26 +63,35 @@ html_game_code = f"""
     .c-purple {{ color: #b366ff; }}
     .c-gray {{ color: #888888; }}
 
+    /* HUD Centrado e Espaçado Uniformemente */
     #hud {{
         display: flex;
-        justify-style: space-around;
+        justify-content: space-around;
+        align-items: center;
         width: 100%;
         max-width: 530px;
         font-weight: bold;
         font-size: 13px;
         color: #ddd;
         background: #1e1e24;
-        padding: 8px 10px;
+        padding: 10px 0;
         border-radius: 6px;
         box-sizing: border-box;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
     }}
+    #hud > div {{
+        flex: 1;
+        text-align: center;
+    }}
+
     #main-layout {{
         display: flex;
+        flex-wrap: wrap;
         gap: 12px;
         align-items: flex-start;
         justify-content: center;
         width: 100%;
+        max-width: 530px;
     }}
     #sidebar-left {{
         width: 110px;
@@ -125,13 +134,13 @@ html_game_code = f"""
         touch-action: none;
     }}
     #sidebar-scores {{
-        width: 120px;
+        width: 130px;
         background: #18181c;
         border: 1px solid #333;
         border-radius: 6px;
         padding: 8px;
         box-sizing: border-box;
-        height: 504px;
+        max-height: 504px;
         overflow-y: auto;
     }}
     #sidebar-scores h4 {{
@@ -142,23 +151,37 @@ html_game_code = f"""
         padding-bottom: 4px;
         color: #ffbd45;
     }}
+
+    /* Nome em cima e Pontuação em baixo */
     .score-item {{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
         font-size: 11px;
         margin-bottom: 6px;
-        word-break: break-all;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #26262e;
+    }}
+    .score-item b {{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+        color: #ffffff;
     }}
     .score-item span {{
         color: #aaa;
-        display: block;
         font-size: 10px;
+        margin-top: 2px;
     }}
+
     .controls {{
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 6px;
         width: 100%;
         max-width: 530px;
-        margin-top: 8px;
+        margin-top: 10px;
     }}
     button {{
         background-color: #262730;
@@ -202,23 +225,39 @@ html_game_code = f"""
         font-size: 11px;
         color: #aaa;
         text-align: center;
-        margin: 4px 0 0 0;
+        margin: 6px 0 0 0;
     }}
 
-    @media (max-width: 520px) {{
+    /* Ajustes para Ecrãs Pequenos / Telemóveis */
+    @media (max-width: 540px) {{
         .ascii-title {{
-            font-size: 7.5px;
+            font-size: 7px;
         }}
-        #sidebar-left, #sidebar-scores {{
-            width: 85px;
+        #hud {{
+            font-size: 11px;
+            padding: 8px 0;
+        }}
+        #main-layout {{
+            justify-content: center;
+            gap: 8px;
+        }}
+        #sidebar-left {{
+            width: 80px;
             padding: 4px;
         }}
-        #sidebar-scores {{
-            height: 400px;
+        #nextCanvas {{
+            width: 60px;
+            height: 60px;
         }}
         #gameCanvas {{
             width: 200px;
             height: 400px;
+        }}
+        #sidebar-scores {{
+            width: 100%;
+            max-width: 290px;
+            max-height: 180px;
+            margin-top: 4px;
         }}
     }}
 </style>
@@ -259,6 +298,7 @@ html_game_code = f"""
                     <input type="text" id="playerName" placeholder="O seu nome" maxlength="12" />
                     <br/>
                     <button id="saveBtn" onclick="submitScore()" style="width:100%; padding:10px; background-color:#2e7d32;">Guardar Pontuação</button>
+                    <button id="cancelBtn" onclick="cancelScore()" style="width:100%; padding:6px; margin-top:8px; background-color:transparent; border:1px solid #666; color:#bbb; border-radius:4px; font-weight:bold; cursor:pointer;">✕</button>
                 </div>
             </div>
         </div>
@@ -553,6 +593,14 @@ function submitScore() {{
     }}
 }}
 
+function cancelScore() {{
+    document.getElementById('scoreForm').style.display = "none";
+    document.getElementById('overlayTitle').innerText = "Tetris";
+    document.getElementById('overlayMsg').innerText = "Pontuação ignorada.";
+    document.getElementById('startBtn').style.display = "block";
+    document.getElementById('startBtn').innerText = "Jogar Novamente";
+}}
+
 function updateHUD() {{
     document.getElementById('scoreVal').innerText = score;
     document.getElementById('levelVal').innerText = level;
@@ -714,4 +762,4 @@ requestAnimationFrame(gameLoop);
 </html>
 """
 
-st.iframe(html_game_code, height=760)
+st.iframe(html_game_code, height=780)
